@@ -10,6 +10,9 @@ use App\Http\Controllers\User\AboutController;
 use App\Http\Controllers\Web\IndexController;
 use App\Http\Controllers\User\GroupController;
 use App\Http\Controllers\User\EventController;
+use App\Http\Controllers\User\ReadingGoalController;
+use App\Http\Controllers\Admin\ReadingChallengeController;
+use App\Http\Middleware\AdminAuthenticate;
 
 Route::controller(IndexController::class)->group(function () {
     Route::get('/', 'index')->name('index');
@@ -25,13 +28,24 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::controller(BookController::class)->group(function () {
-        Route::get('/books', 'index')->name('books.index');
-        Route::get('/books/create', 'create')->name('books.create');
-        Route::post('/books/store', 'store')->name('books.store');
-        Route::get('/books/{id}/edit', 'edit')->name('books.edit');
-        Route::post('/books/{id}/update', 'update')->name('books.update');
-        Route::post('/books/delete', 'destroy')->name('books.delete');
+    Route::middleware(['admin'])->group(function () {
+        Route::controller(BookController::class)->group(function () {
+            Route::get('/books', 'index')->name('books.index');
+            Route::get('/books/create', 'create')->name('books.create');
+            Route::post('/books/store', 'store')->name('books.store');
+            Route::get('/books/{id}/edit', 'edit')->name('books.edit');
+            Route::post('/books/{id}/update', 'update')->name('books.update');
+            Route::post('/books/delete', 'destroy')->name('books.delete');
+        });
+
+        Route::controller(ReadingChallengeController::class)->group(function () {
+            Route::get('/reading-challenges', 'index')->name('reading-challenges.index');
+            Route::get('/reading-challenges/create', 'create')->name('reading-challenges.create');
+            Route::post('/reading-challenges', 'store')->name('reading-challenges.store');
+            Route::get('/reading-challenges/{id}/edit', 'edit')->name('reading-challenges.edit');
+            Route::post('/reading-challenges/{id}/update', 'update')->name('reading-challenges.update');
+            Route::post('/reading-challenges/delete', 'destroy')->name('reading-challenges.delete');
+        });
     });
 
     Route::prefix('user')->group(function () {
@@ -39,20 +53,23 @@ Route::middleware('auth')->group(function () {
             Route::get('/books', 'index')->name('user.books');
             Route::get('/books/{id}/detail', 'show')->name('user.books.detail');
             Route::post('/books/{id}/rating-store', 'rating_store')->name('user.books.rating-store');
+            Route::get('/books/{id}/liked_books', 'liked_books')->name('user.books.liked_books');
         });
 
-        Route::controller(UserController::class)->group(function () {
-            Route::get('/user-creation', 'index')->name('user.user-creation.index');
-            Route::get('/user-creation/create', 'create')->name('user.user-creation.create');
-            Route::post('/user-creation/store', 'store')->name('user.user-creation.store');
-            Route::get('/user-creation/{id}/edit', 'edit')->name('user.user-creation.edit');
-            Route::post('/user-creation/{id}/update', 'update')->name('user.user-creation.update');
-            Route::post('/user-creation/delete', 'delete')->name('user.user-creation.delete');
-        });
+        Route::middleware(['admin'])->group(function () {
+            Route::controller(UserController::class)->group(function () {
+                Route::get('/user-creation', 'index')->name('user.user-creation.index');
+                Route::get('/user-creation/create', 'create')->name('user.user-creation.create');
+                Route::post('/user-creation/store', 'store')->name('user.user-creation.store');
+                Route::get('/user-creation/{id}/edit', 'edit')->name('user.user-creation.edit');
+                Route::post('/user-creation/{id}/update', 'update')->name('user.user-creation.update');
+                Route::post('/user-creation/delete', 'delete')->name('user.user-creation.delete');
+            });
 
-        Route::controller(ReviewController::class)->group(function () {
-            Route::get('/reviews', 'index')->name('user.reviews.index');
-            Route::post('/reviews/delete', 'delete')->name('user.reviews.delete');
+            Route::controller(ReviewController::class)->group(function () {
+                Route::get('/reviews', 'index')->name('user.reviews.index');
+                Route::post('/reviews/delete', 'delete')->name('user.reviews.delete');
+            });
         });
 
         Route::controller(GroupController::class)->group(function () {
@@ -82,6 +99,13 @@ Route::middleware('auth')->group(function () {
         });
         Route::controller(AboutController::class)->group(function () {
             Route::get('/about', 'index')->name('user.about.index');
+        });
+
+        Route::controller(ReadingGoalController::class)->group(function () {
+            Route::get('/reading-goals', 'index')->name('user.reading-goals.index');
+            Route::get('/reading-goals/create', 'create')->name('user.reading-goals.create');
+            Route::post('/reading-goals/store', 'store')->name('user.reading-goals.store');
+            Route::post('/reading-goals/update/{id}', 'update')->name('user.reading-goals.update');
         });
     });
 });

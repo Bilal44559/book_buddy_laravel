@@ -21,7 +21,6 @@
                                         </b>{{ $group->joined_users->where('status', 'pending')->count() }}</b></span></p>
                                 <hr>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <a href="{{ route('user.groups.events', $group->id) }}" class="fw-bold">Detail More</a>
                                     @php
                                         $check_group_joined = checkGroupJoined($group->id, auth()->user()->id);
                                     @endphp
@@ -29,6 +28,9 @@
                                         <a href="{{ route('user.groups.joined-request', $group->id) }}"
                                             class="btn btn-success">Join Group</a>
                                     @else
+                                        @if($check_group_joined['data']['status'] == "accepted")
+                                        <a href="{{ route('user.groups.events', $group->id) }}" class="fw-bold">Detail More</a>
+                                        @endif
                                         <span class="fw-bold">{{ ucwords($check_group_joined['data']['status']) }}</span>
                                     @endif
                                 </div>

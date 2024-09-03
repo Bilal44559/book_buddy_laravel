@@ -67,6 +67,11 @@
                     data-i18n="Dashboards">Reviews</span></a>
             </li>
 
+            <li class=" nav-item {{ Request::segment(1) == "reading-challenges" ? 'active' : '' }}"><a class="d-flex align-items-center"
+                href="{{ route('reading-challenges.index') }}"><i data-feather="user"></i><span class="menu-title text-truncate"
+                    data-i18n="Dashboards">Reading Challenges</span></a>
+            </li>
+
             {{-- <li class=" nav-item"><a class="d-flex align-items-center" href="index.html"><i
                         data-feather="home"></i><span class="menu-title text-truncate"
                         data-i18n="Dashboards">Dashboards</span><span

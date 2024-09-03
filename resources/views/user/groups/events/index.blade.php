@@ -22,10 +22,12 @@
                                 <hr>
                                 <div class="d-flex justify-content-between align-items-center">
                                     {{-- <a href="{{ route('user.groups.events', $event->id) }}" class="fw-bold">Detail More</a> --}}
+                                    @if(auth()->user()->id == $event->user_id)
                                     <a href="{{ route('user.groups.events.edit', [$group->id, $event->id]) }}"
                                         class="btn btn-primary">Edit</a>
                                     <a href="#" class="btn btn-danger delete_model" data-id="{{ $event->id }}"
                                         data-url="{{ route('user.groups.events.delete', [$group->id, $event->id]) }}">Delete</a>
+                                    @endif
                                     <a href="{{ route('user.groups.events.detail', [$group->id, $event->id]) }}"
                                         class="fw-bold" data-id="" data-url="">View
                                         detail</a>

@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\{Group,JoinedGroup};
+use App\Models\{Group,JoinedGroup,LikedBook};
 
 function checkGroupJoined($group_id, $user_id)
 {
@@ -14,5 +14,15 @@ function checkGroupJoined($group_id, $user_id)
         return [
             'status' => 0,
         ];
+    }
+}
+
+function checkUserLikedBook($book_id)
+{
+    $liked = LikedBook::where('book_id', $book_id)->where('user_id', auth()->user()->id)->first();
+    if ($liked) {
+        return true;
+    } else {
+        return false;
     }
 }

@@ -65,29 +65,21 @@
                     <!-- Blog -->
                     <div class="col-12">
                         <div class="card">
-                            <img src="{{ asset('app-assets/images/banner/banner-12.jpg') }}" class="img-fluid card-img-top"
-                                alt="Blog Detail Pic">
                             <div class="card-body">
                                 <h4 class="card-title"></h4>
-                                <div class="d-flex">
-                                    <div class="avatar me-50">
-                                        <img src="{{ asset('app-assets/images/portrait/small/avatar-s-7.jpg') }}"
-                                            alt="Avatar" width="24" height="24">
-                                    </div>
+                                <div class="">
+                                    <h1>{{ $event->name }}</h1><hr>
                                     <div class="author-info">
-                                        <small class="text-muted me-25">by</small>
-                                        <small>{{ $event->name }}</small>
-                                        <span class="text-muted ms-50 me-25">|</span>
-                                        <small class="text-muted">{{ $event->type }}</small>
+                                        <span class="badge bg-primary">{{ ucwords(str_replace('_', ' ', $event->type)) }}</span>
                                     </div>
                                 </div>
                                 <div class="my-1 py-25">
                                     <a href="#">
                                         <span class="badge rounded-pill badge-light-info me-50"></span>
                                     </a>
-
                                 </div>
-                                <p class="card-text mb-2">{{ $event->description }}</p>
+                                <p class="card-text mb-2">
+                                    <span><b>Description:</b></span><br>{{ $event->description }}</p>
                                 </p>
                                 <hr class="my-2">
                                 <div class="d-flex align-items-center justify-content-between">
@@ -103,22 +95,9 @@
                                                 </svg>
                                             </a>
                                             <a href="#">
-                                                <div class="text-body align-middle"></div>
+                                                <div class="text-body align-middle">{{ count($event->all_comments) }}</div>
                                             </a>
                                         </div>
-                                        {{-- <div class="d-flex align-items-center">
-                                            <a href="#" class="me-50">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-bookmark font-medium-5 text-body align-middle">
-                                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                                </svg>
-                                            </a>
-                                            <a href="#">
-                                                <div class="text-body align-middle">139</div>
-                                            </a>
-                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +109,7 @@
 
                     <div class="col-12 mt-1" id="blogComment">
                         <h6 class="section-label mt-25">Comment</h6>
-                        @foreach ($event['comments'] as $comment)
+                        @foreach ($event->comments as $comment)
                             <div class="card">
                                 <div class="card-body">
                                     <div class="d-flex align-items-start">
@@ -155,9 +134,56 @@
                                             </div>
                                         </a>
 
-
-
                                     </div>
+                                    @if(count($comment->sub_comments) > 0)
+                                    @foreach($comment->sub_comments as $sub_comment)
+                                    <div style="margin-left: 50px;" class="mt-1">
+                                        <div class="d-flex align-items-start">
+                                            <div class="avatar me-75">
+                                                <img src="{{ asset('app-assets/images/portrait/small/avatar-s-9.jpg') }}"
+                                                    width="38" height="38" alt="Avatar">
+                                            </div>
+
+                                        </div>
+                                        <div class="author-info">
+                                            <h6 class="fw-bolder mb-25">{{ $sub_comment->user->name }}</h6>
+                                            <p class="card-text">{{ $sub_comment->created_at->diffForHumans() }}</p>
+                                            <p class="card-text">
+                                                {{ $sub_comment->comment }}
+                                            </p>
+                                            <!-- Reply Link -->
+                                            <a href="javascript:void(0);">
+                                                <div class="d-inline-flex align-items-center"
+                                                    onclick="openReplyModal({{ $sub_comment->id }})">
+                                                    <i data-feather="corner-up-left" class="font-medium-3 me-50"></i>
+                                                    <span>Reply</span>
+                                                </div>
+                                            </a>
+                                            @if(count($sub_comment->sub_comments) > 0)
+                                            @foreach($sub_comment->sub_comments as $last_sub_comment)
+                                            <div style="margin-left: 50px;" class="mt-1">
+                                                <div class="d-flex align-items-start">
+                                                    <div class="avatar me-75">
+                                                        <img src="{{ asset('app-assets/images/portrait/small/avatar-s-9.jpg') }}"
+                                                            width="38" height="38" alt="Avatar">
+                                                    </div>
+
+                                                </div>
+                                                <div class="author-info">
+                                                    <h6 class="fw-bolder mb-25">{{ $last_sub_comment->user->name }}</h6>
+                                                    <p class="card-text">{{ $last_sub_comment->created_at->diffForHumans() }}</p>
+                                                    <p class="card-text">
+                                                        {{ $last_sub_comment->comment }}
+                                                    </p>
+
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
@@ -176,7 +202,7 @@
                                             aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <input type="text" name="comment_id" id="commentId">
+                                        <input type="hidden" name="comment_id" id="commentId">
                                         <textarea class="form-control" rows="3" name="reply_comment" id="replyText" placeholder="Write a reply..."></textarea>
                                     </div>
                                     <div class="modal-footer">
@@ -192,25 +218,28 @@
                     <!--/ Blog Comment -->
 
                     <!-- Leave a Blog Comment -->
-                    <div class="col-12 mt-1">
-                        <h6 class="section-label mt-25">Leave a Comment</h6>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    {{-- <input type="hidden" value="{{ $event->id }}" name="event_id"> --}}
-                                    <div class="col-12">
-                                        <textarea class="form-control mb-2" rows="4" placeholder="Comment" name="comment"></textarea>
+                    <form action="{{ route('user.groups.events.eventcomment_store', $event->id) }}" method="POST">
+                        @csrf
+                        <div class="col-12 mt-1">
+                            <h6 class="section-label mt-25">Leave a Comment</h6>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <input type="hidden" value="{{ $event->id }}" name="event_id">
+                                        <div class="col-12">
+                                            <textarea class="form-control mb-2" rows="4" placeholder="Comment" name="comment"></textarea>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit"
+                                                class="btn btn-primary waves-effect waves-float waves-light">Post
+                                                Comment</button>
+                                        </div>
                                     </div>
-                                    <div class="col-12">
-                                        <button type="submit"
-                                            class="btn btn-primary waves-effect waves-float waves-light">Post
-                                            Comment</button>
-                                    </div>
-                                </div>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                     <!--/ Leave a Blog Comment -->
                 </div>
             </div>

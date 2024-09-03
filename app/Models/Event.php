@@ -12,6 +12,11 @@ class Event extends Model
     public function comments()
     {
 
+        return $this->hasMany(EventComment::class, 'event_id')->where('parent_id', null);
+    }
+
+    public function all_comments()
+    {
         return $this->hasMany(EventComment::class, 'event_id');
     }
 }

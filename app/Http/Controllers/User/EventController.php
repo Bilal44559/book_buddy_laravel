@@ -87,7 +87,7 @@ class EventController extends Controller
     public function detail($id, $event_id)
     {
         $group = Group::findOrFail($id);
-        $event = Event::with('comments.user')->findOrFail($event_id);
+        $event = Event::findOrFail($event_id);
 
         return view('user.groups.events.detail', compact('group', 'event'));
     }

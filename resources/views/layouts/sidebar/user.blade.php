@@ -82,6 +82,11 @@
                     </li>
                 </ul>
             </li>
+            <li class=" nav-item {{ Request::segment(2) == 'reading-goals' ? 'active' : '' }}"><a
+                    class="d-flex align-items-center" href="{{ route('user.reading-goals.index') }}"><i
+                        data-feather='book-open'></i><span class="menu-title text-truncate"
+                        data-i18n="Dashboards">Reading Goals</span></a>
+            </li>
             <li class=" nav-item {{ Request::segment(2) == 'about' ? 'active' : '' }}"><a
                     class="d-flex align-items-center" href="{{ route('user.about.index') }}"><i
                         data-feather='menu'></i><span class="menu-title text-truncate"

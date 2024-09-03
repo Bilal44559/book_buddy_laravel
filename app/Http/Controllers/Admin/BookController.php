@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Books, User};
+use App\Models\{Book, User};
 use Illuminate\Http\Request;
 
 
@@ -14,7 +14,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Books::orderBy('id', 'desc')->get();
+        $books = Book::orderBy('id', 'desc')->get();
         // return $books;
         return view('admin.books.index', compact('books'));
     }
@@ -42,7 +42,7 @@ class BookController extends Controller
             'description' => 'required'
         ]);
 
-        $books = new Books();
+        $books = new Book();
         $books->user_id = auth()->user()->id;
         $books->title = $request->title;
         $books->author_id = $request->author_id;
@@ -66,7 +66,7 @@ class BookController extends Controller
      */
     public function edit(string $id)
     {
-        $book = Books::findOrFail($id);
+        $book = Book::findOrFail($id);
         $users = User::where('user_type', 'user')->where('is_author', 1)->OrderBy('id', 'DESC')->get();
         return view('admin.books.edit', compact('book', 'users'));
     }
@@ -85,7 +85,7 @@ class BookController extends Controller
             'description' => 'required'
         ]);
 
-        $books = Books::findOrFail($id);
+        $books = Book::findOrFail($id);
         $books->title = $request->title;
         $books->author_id = $request->author_id;
         $books->genre = $request->genre;
@@ -100,7 +100,7 @@ class BookController extends Controller
      */
     public function destroy(Request $request)
     {
-        $book = Books::findOrFail($request->id);
+        $book = Book::findOrFail($request->id);
         $book->delete();
         return redirect()->route('books.index')->with('success', 'Book deleted successfully');
     }

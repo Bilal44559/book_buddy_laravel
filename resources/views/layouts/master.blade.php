@@ -54,6 +54,7 @@
     <!-- END: Custom CSS-->
 
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @yield('page-styles')
 </head>
 <!-- END: Head-->
@@ -175,6 +176,7 @@
     <script src="http://cdn.datatables.net/2.1.4/js/dataTables.min.js"></script>
     <script src="{{ asset('/') }}app-assets/vendors/js/extensions/swiper.min.js"></script>
     <script src="{{ asset('/') }}app-assets/js/scripts/pages/app-ecommerce-details.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
         $(window).on('load', function() {
@@ -184,6 +186,9 @@
                     height: 14
                 });
             }
+            $(document).ready(function() {
+                $('.select2').select2();
+            });
             let table = new DataTable('#myTable');
             $(".delete_model").on('click', function() {
                 $("#deleteModal").modal('show');

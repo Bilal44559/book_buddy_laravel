@@ -109,19 +109,24 @@
                                                 <div class="text-body align-middle">{{ count($book->rating) }}</div>
                                             </a>
                                         </div>
-                                        {{-- <div class="d-flex align-items-center">
-                                            <a href="#" class="me-50">
+
+                                        <div class="d-flex align-items-center me-1">
+                                            <a href="{{ route('user.books.liked_books', $book->id) }}" class="me-50">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                    fill="{{ checkUserLikedBook($book->id) ? '#7367f0' : 'none' }}"
+                                                    stroke="{{ checkUserLikedBook($book->id) ? '#7367f0' : 'currentColor' }}"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                     class="feather feather-bookmark font-medium-5 text-body align-middle">
-                                                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                                    <path
+                                                        d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3">
+                                                    </path>
                                                 </svg>
                                             </a>
                                             <a href="#">
-                                                <div class="text-body align-middle">139</div>
+                                                <div class="text-body align-middle">{{ count($book->likedBooks) }}</div>
                                             </a>
-                                        </div> --}}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
