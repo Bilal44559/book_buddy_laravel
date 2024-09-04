@@ -13,7 +13,7 @@ class BookController extends Controller
 {
     public function index()
     {
-        $books = Book::get();
+        $books = Book::orderBy('id', 'DESC')->get();;
         return view('user.books.index', compact('books'));
     }
     public function show($id)
