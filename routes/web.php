@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
             Route::get('/books/{id}/detail', 'show')->name('user.books.detail');
             Route::post('/books/{id}/rating-store', 'rating_store')->name('user.books.rating-store');
             Route::get('/books/{id}/liked_books', 'liked_books')->name('user.books.liked_books');
+            Route::get('/books/{id}/read_books', 'read_books')->name('user.books.read_books');
         });
 
         Route::middleware(['admin'])->group(function () {

@@ -55,6 +55,14 @@
             stroke: #babfc7;
             color: #babfc7;
         }
+
+        #pdf-canvas {
+            width: 100%;
+            max-width: 600px;
+            /* Set a maximum width */
+            height: auto;
+            margin: 0 auto;
+        }
     </style>
 @endsection
 @section('content')
@@ -93,6 +101,18 @@
                                 <p class="card-text mb-2">{{ $book->description }}</p>
                                 </p>
                                 <hr class="my-2">
+                                @if (!empty($book->file))
+                                    <div style="text-align: center;">
+                                        <canvas id="pdf-canvas"
+                                            style="border: 1px solid #000; margin-bottom: 10px;"></canvas>
+                                        <div>
+                                            <button id="prev-page" class="btn btn-primary">Previous Page</button>
+                                            <span>Page: <span id="page-num"></span> / <span id="page-count"></span></span>
+                                            <button id="next-page" class="btn btn-primary">Next Page</button>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                @endif
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="d-flex align-items-center">
                                         <div class="d-flex align-items-center me-1">
@@ -242,6 +262,112 @@
 
 @endsection
 @section('page-scripts')
-    {{-- <script src="{{ asset('/') }}app-assets/js/scripts/pages/app-ecommerce-details.js"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.3.122/pdf.min.js"></script>
+    <script>
+        var url = '{{ asset('storage/' . $book->file) }}';
+        var pdfjsLib = window['pdfjsLib'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.3.122/pdf.worker.min.js';
 
+        var pdfDoc = null,
+            pageNum = 1,
+            pageRendering = false,
+            pageNumPending = null,
+            scale = 0.75, // Adjust this value for smaller size
+            canvas = document.getElementById('pdf-canvas'),
+            ctx = canvas.getContext('2d');
+
+        /**
+         * Render the given page number.
+         */
+        function renderPage(num) {
+            pageRendering = true;
+            pdfDoc.getPage(num).then(function(page) {
+                var viewport = page.getViewport({
+                    scale: scale
+                });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                // Render PDF page into canvas context
+                var renderContext = {
+                    canvasContext: ctx,
+                    viewport: viewport
+                };
+                var renderTask = page.render(renderContext);
+
+                renderTask.promise.then(function() {
+                    pageRendering = false;
+                    if (pageNumPending !== null) {
+                        renderPage(pageNumPending);
+                        pageNumPending = null;
+                    }
+
+                    // Check if it's the last page
+                    if (num === pdfDoc.numPages) {
+                        // alert("You have reached the last page!");
+                        $.ajax({
+                            url: '{{ route('user.books.read_books', $book->id) }}',
+                            type: 'GET',
+                            success: function(response) {
+                                console.log('Data posted successfully:', response);
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error posting data:', error);
+                            }
+                        });
+
+                    }
+                });
+            });
+
+            document.getElementById('page-num').textContent = num;
+        }
+
+        /**
+         * If another page rendering is in progress, wait until the rendering is
+         * finished. Otherwise, execute rendering immediately.
+         */
+        function queueRenderPage(num) {
+            if (pageRendering) {
+                pageNumPending = num;
+            } else {
+                renderPage(num);
+            }
+        }
+
+        /**
+         * Display the previous page.
+         */
+        function onPrevPage() {
+            if (pageNum <= 1) {
+                return;
+            }
+            pageNum--;
+            queueRenderPage(pageNum);
+        }
+        document.getElementById('prev-page').addEventListener('click', onPrevPage);
+
+        /**
+         * Display the next page.
+         */
+        function onNextPage() {
+            if (pageNum >= pdfDoc.numPages) {
+                return;
+            }
+            pageNum++;
+            queueRenderPage(pageNum);
+        }
+        document.getElementById('next-page').addEventListener('click', onNextPage);
+
+        /**
+         * Asynchronously download the PDF.
+         */
+        pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById('page-count').textContent = pdfDoc.numPages;
+
+            // Initial page rendering
+            renderPage(pageNum);
+        });
+    </script>
 @endsection

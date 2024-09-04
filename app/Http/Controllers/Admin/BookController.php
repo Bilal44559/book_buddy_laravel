@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Book, User};
+use App\Models\{Book, ReadBook, User};
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 
@@ -33,22 +34,33 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
         $request->validate([
             'title' => 'required',
             'author_id' => 'required',
             'genre' => 'required',
             'publish_date' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'pdf_file' => 'mimes:pdf|max:2048'
         ]);
 
         $books = new Book();
+        $slug = Str::slug($request->title, '-');
+        $originalSlug = $slug;
+        $counter = 1;
+        while (Book::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
+        }
+        $books->slug = $slug;
         $books->user_id = auth()->user()->id;
         $books->title = $request->title;
         $books->author_id = $request->author_id;
         $books->genre = $request->genre;
         $books->publish_date = $request->publish_date;
         $books->description = $request->description;
+        if ($request->hasFile('pdf_file')) {
+            $books->file = $request->pdf_file->store('books', 'public');
+        }
         $books->save();
         return redirect()->route('books.index')->with('success', 'Book created successfully');
     }
@@ -91,6 +103,25 @@ class BookController extends Controller
         $books->genre = $request->genre;
         $books->publish_date = $request->publish_date;
         $books->description = $request->description;
+        if ($books->title !== $request->title or empty($books->slug)) {
+            $slug = Str::slug($request->title, '-');
+            $originalSlug = $slug;
+            $counter = 1;
+            while (Book::where('slug', $slug)->where('id', '!=', $books->id)->exists()) {
+                $slug = $originalSlug . '-' . $counter;
+                $counter++;
+            }
+        } else {
+            $slug = $books->slug;
+        }
+
+        if ($request->hasFile('pdf_file')) {
+            if (!empty($books->file)) {
+                \Storage::delete('public/' . $books->file);
+            }
+            $books->file = $request->pdf_file->store('books', 'public');
+        }
+        $books->slug = $slug;
         $books->save();
         return redirect()->route('books.index')->with('success', 'Book Update successfully');
     }

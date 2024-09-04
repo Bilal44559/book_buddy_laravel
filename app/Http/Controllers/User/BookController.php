@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\Rating;
 use App\Models\LikedBook;
 use Illuminate\Http\Request;
+use App\Models\ReadBook;
 
 class BookController extends Controller
 {
@@ -54,5 +55,17 @@ class BookController extends Controller
             $liked_books->save();
         }
         return back()->with('success', 'Book liked successfully');
+    }
+    public function read_books($id)
+    {
+        $read = ReadBook::where('user_id', auth()->user()->id)->where('book_id', $id)->first();
+        if (!$read) {
+            $readbook = new ReadBook();
+            $readbook->user_id = auth()->user()->id;
+            $readbook->book_id = $id;
+            $readbook->read_date = now();
+            $readbook->save();
+        }
+        return true;
     }
 }

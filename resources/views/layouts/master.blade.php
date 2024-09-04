@@ -177,6 +177,8 @@
     <script src="{{ asset('/') }}app-assets/vendors/js/extensions/swiper.min.js"></script>
     <script src="{{ asset('/') }}app-assets/js/scripts/pages/app-ecommerce-details.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.js"></script>
+
 
     <script>
         $(window).on('load', function() {
@@ -207,7 +209,7 @@
             });
         })
     </script>
-    @stack('page-scripts')
+    @yield('page-scripts')
 </body>
 <!-- END: Body-->
 

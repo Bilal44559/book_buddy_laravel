@@ -42,13 +42,16 @@
                                         <div class="mb-1">
                                             <label class="form-label" for="city-column"><b>Author <span
                                                         class="text-danger">*</span></b></label>
-                                                    <select class="form-select @error('author_id') is-invalid @enderror" id="author_id" name="author_id">
-                                                        @if(count($users) > 0)
-                                                        @foreach($users as $user)
-                                                            <option value="{{$user->id}}" @if($book->author_id == $user->id) selected @endif>{{$user->name}}</option>
-                                                        @endforeach
-                                                        @endif
-                                                    </select>
+                                            <select class="form-select @error('author_id') is-invalid @enderror"
+                                                id="author_id" name="author_id">
+                                                @if (count($users) > 0)
+                                                    @foreach ($users as $user)
+                                                        <option value="{{ $user->id }}"
+                                                            @if ($book->author_id == $user->id) selected @endif>
+                                                            {{ $user->name }}</option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
                                             @error('author_id')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -86,6 +89,31 @@
                                             @enderror
                                         </div>
                                     </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="mb-1">
+                                            <label class="form-label" for="city-column"><b>Select PDF <span
+                                                        class="text-danger">*</span></b></label>
+                                            <input type="file" id="city-column"
+                                                class="form-control @error('pdf_file') is-invalid @enderror"
+                                                placeholder="File" name="pdf_file" />
+                                            @error('pdf_file')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    @if (!empty($book->file))
+                                        <div class="col-md-6 col-12">
+                                            <div class="mb-1">
+                                                <label class="form-label" for="city-column"><b>Current PDF <span
+                                                            class="text-danger">*</span></b></label><br>
+                                                <a class="btn btn-primary" href="{{ asset('storage/' . $book->file) }}"
+                                                    target="_blank">View
+                                                    File</a>
+                                            </div>
+                                        </div>
+                                    @endif
                                     <div class="col-md-12 col-12 mb-1">
                                         <label class="form-label" for="city-column"><b>Description <span
                                                     class="text-danger">*</span></b></label>
