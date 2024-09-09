@@ -114,6 +114,29 @@
                                             </div>
                                         </div>
                                     @endif
+                                    <div class="col-md-6 col-12">
+                                        <div class="mb-1">
+                                            <label class="form-label" for="city-column"><b>Book Image <span
+                                                        class="text-danger">*</span></b></label>
+                                            <input type="file" id="city-column"
+                                                class="form-control @error('image') is-invalid @enderror"
+                                                placeholder="File" name="image" />
+                                            @error('image')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    @if (!empty($book->image))
+                                        <div class="col-md-6 col-12">
+                                            <div class="mb-1">
+                                                <label class="form-label" for="city-column"><b>Current Image <span
+                                                            class="text-danger">*</span></b></label><br>
+                                                <img src="{{ asset('storage/' . $book->image) }}" class="img-fluid" width="100" height="100" alt="">
+                                            </div>
+                                        </div>
+                                    @endif
                                     <div class="col-md-12 col-12 mb-1">
                                         <label class="form-label" for="city-column"><b>Description <span
                                                     class="text-danger">*</span></b></label>

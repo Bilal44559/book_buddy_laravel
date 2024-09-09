@@ -13,6 +13,7 @@ use App\Http\Controllers\User\EventController;
 use App\Http\Controllers\User\ReadingGoalController;
 use App\Http\Controllers\Admin\ReadingChallengeController;
 use App\Http\Middleware\AdminAuthenticate;
+use App\Http\Controllers\User\SocialFeedController;
 
 Route::controller(IndexController::class)->group(function () {
     Route::get('/', 'index')->name('index');
@@ -108,6 +109,15 @@ Route::middleware('auth')->group(function () {
             Route::post('/reading-goals/store', 'store')->name('user.reading-goals.store');
             Route::post('/reading-goals/update/{id}', 'update')->name('user.reading-goals.update');
         });
+
+        Route::controller(SocialFeedController::class)->group(function () {
+            Route::get('/social-feed', 'index')->name('user.social_feed.index');
+            Route::get('/social-feed/{id}/author/profile', 'author_profile')->name('user.social_feed.author_profile');
+            Route::get('/social-feed/{id}/author/liked-books', 'author_liked_books')->name('user.social_feed.author_liked_books');
+            Route::get('/social-feed/{id}/following-user', 'store_following_user')->name('user.social_feed.store_following_user');
+            Route::get('/social-feed/{id}/following', 'show_following')->name('user.social_feed.show_following');
+        });
+
     });
 });
 

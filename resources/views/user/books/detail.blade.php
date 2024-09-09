@@ -73,13 +73,18 @@
                     <!-- Blog -->
                     <div class="col-12">
                         <div class="card">
-                            <img src="../../../app-assets/images/banner/banner-12.jpg" class="img-fluid card-img-top"
+                            @if(!empty($book->image))
+                            <img src="{{ asset('storage/'.$book->image) }}" class="img-fluid card-img-top"
+                            alt="{{ $book->title }}">
+                            @else
+                            <img src="{{asset('/')}}app-assets/images/banner/banner-12.jpg" class="img-fluid card-img-top"
                                 alt="Blog Detail Pic">
+                            @endif
                             <div class="card-body">
                                 <h4 class="card-title">{{ $book->title }}</h4>
                                 <div class="d-flex">
                                     <div class="avatar me-50">
-                                        <img src="../../../app-assets/images/portrait/small/avatar-s-7.jpg" alt="Avatar"
+                                        <img src="{{asset('/')}}app-assets/images/portrait/small/avatar-s-7.jpg" alt="Avatar"
                                             width="24" height="24">
                                     </div>
                                     <div class="author-info">
@@ -215,7 +220,7 @@
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <textarea class="form-control mb-2" rows="4" placeholder="Comment" name="comment"></textarea>
+                                            <textarea class="form-control mb-2" rows="4" placeholder="Comment" name="comment" required></textarea>
                                         </div>
                                         <div class="col-12">
                                             <button type="submit"

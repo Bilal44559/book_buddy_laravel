@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LikedBook extends Model
+class UserFollow extends Model
 {
     use HasFactory;
 
-    public function book()
+    public function followers()
     {
-        return $this->belongsTo(Book::class);
+        return $this->hasOne(User::class, 'id', 'follower_user_id');
     }
 }

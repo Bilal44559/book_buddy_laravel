@@ -40,7 +40,8 @@ class BookController extends Controller
             'genre' => 'required',
             'publish_date' => 'required',
             'description' => 'required',
-            'pdf_file' => 'mimes:pdf|max:2048'
+            'pdf_file' => 'mimes:pdf|max:2048',
+            'image' => 'required|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $books = new Book();
@@ -60,6 +61,10 @@ class BookController extends Controller
         $books->description = $request->description;
         if ($request->hasFile('pdf_file')) {
             $books->file = $request->pdf_file->store('books', 'public');
+        }
+
+        if ($request->hasFile('image')) {
+            $books->image = $request->image->store('books', 'public');
         }
         $books->save();
         return redirect()->route('books.index')->with('success', 'Book created successfully');
@@ -94,7 +99,9 @@ class BookController extends Controller
             'author_id' => 'required',
             'genre' => 'required',
             'publish_date' => 'required',
-            'description' => 'required'
+            'description' => 'required',
+            'pdf_file' => 'mimes:pdf|max:2048',
+            'image' => 'mimes:jpg,jpeg,png|max:2048'
         ]);
 
         $books = Book::findOrFail($id);
@@ -120,6 +127,13 @@ class BookController extends Controller
                 \Storage::delete('public/' . $books->file);
             }
             $books->file = $request->pdf_file->store('books', 'public');
+        }
+
+        if ($request->hasFile('image')) {
+            if (!empty($books->image)) {
+                \Storage::delete('public/' . $books->image);
+            }
+            $books->image = $request->image->store('books', 'public');
         }
         $books->slug = $slug;
         $books->save();

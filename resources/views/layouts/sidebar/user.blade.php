@@ -87,6 +87,11 @@
                         data-feather='book-open'></i><span class="menu-title text-truncate"
                         data-i18n="Dashboards">Reading Goals</span></a>
             </li>
+            <li class=" nav-item {{ Request::segment(2) == 'social-feed' ? 'active' : '' }}"><a
+                    class="d-flex align-items-center" href="{{ route('user.social_feed.index') }}"><i
+                        data-feather='menu'></i><span class="menu-title text-truncate"
+                        data-i18n="Dashboards">Social Feed</span></a>
+            </li>
             <li class=" nav-item {{ Request::segment(2) == 'about' ? 'active' : '' }}"><a
                     class="d-flex align-items-center" href="{{ route('user.about.index') }}"><i
                         data-feather='menu'></i><span class="menu-title text-truncate"

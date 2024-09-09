@@ -46,8 +46,24 @@ class User extends Authenticatable
         ];
     }
 
+
+    public function books()
+    {
+        return $this->hasMany(Book::class, 'author_id', 'id');
+    }
+
+    public function liked_books()
+    {
+        return $this->hasMany(LikedBook::class, 'user_id', 'id');
+    }
+
     public function joined_groups()
     {
         return $this->hasMany(JoinedGroup::class, 'user_id', 'id');
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'user_follows', 'user_id', 'following_id');
     }
 }

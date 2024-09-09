@@ -23,6 +23,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Image</th>
                                             <th>Title</th>
                                             <th>Author</th>
                                             <th>Genre</th>
@@ -35,6 +36,13 @@
                                         @foreach ($books as $book)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
+                                                <td>
+                                                    @if(!empty($book->image))
+                                                        <img src="{{ asset('storage/'.$book->image) }}" width="100" height="100">
+                                                    @else
+                                                    No Image
+                                                    @endif
+                                                </td>
                                                 <td>{{ $book->title }}</td>
                                                 <td>{{ $book->author->name }}</td>
                                                 <td>{{ $book->genre }}</td>

@@ -5,7 +5,11 @@
 @foreach ($books as $book)
     <div class="templatemo_product_box">
         <h1>{{$book->title}}  <span>(by {{$book->author->name}}r)</span></h1>
+        @if(!empty($book->image))
+        <img src="{{ asset('storage/'.$book->image)}}"  width="100" height="150" alt="image" />
+        @else
         <img src="images/templatemo_image_01.jpg" alt="image" />
+        @endif
         <div class="product_info">
             <p>{{ substr($book->description,0,50)}}...</p>
         {{-- <h3>$55</h3> --}}
